@@ -33,29 +33,27 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
 
     private async Task<bool> ValidateAsync(string filePath)
     {
-        ////try
-        ////{
-        this.Log.LogMessage(MessageImportance.High, $"Validating -> {filePath}");
-        using var json = File.OpenRead(filePath);
-        var options = new JsonDocumentOptions
+        try
         {
-            AllowTrailingCommas = false,
-            CommentHandling = JsonCommentHandling.Skip,
-        };
-        using var document = await JsonDocument.ParseAsync(json, options).ConfigureAwait(false);
-        /*
-        var schema = await JsonSchema.FromStream().ConfigureAwait(false);
-        var result = schema.Validate(json.RootElement);
-        var validity = result.IsValid ? "Valid" : "Invalid";
-        */
-        return true;
-        /*
+            this.Log.LogMessage(MessageImportance.High, $"Validating -> {filePath}");
+            using var json = File.OpenRead(filePath);
+            var options = new JsonDocumentOptions
+            {
+                AllowTrailingCommas = false,
+                CommentHandling = JsonCommentHandling.Skip,
+            };
+            using var document = await JsonDocument.ParseAsync(json, options).ConfigureAwait(false);
+            /*
+            var schema = await JsonSchema.FromStream().ConfigureAwait(false);
+            var result = schema.Validate(json.RootElement);
+            var validity = result.IsValid ? "Valid" : "Invalid";
+            */
+            return true;
         }
-        catch (Exception ex)
+        catch (JsonException ex)
         {
             this.Log.LogErrorFromException(ex, true);
             return false;
         }
-        */
     }
 }
