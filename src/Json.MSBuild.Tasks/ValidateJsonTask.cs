@@ -1,13 +1,12 @@
 namespace Json.MSBuild.Tasks;
 
-using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Json.Schema;
 using Microsoft.Build.Framework;
-using Microsoft.VisualStudio.Threading;
 
 /// <summary>
 /// MSBuild Task for parsing and validating an arbitrary number of json files including the schema.
@@ -17,14 +16,17 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
     [Required]
     public ITaskItem[] Files { get; set; }
 
+    [SuppressMessage("", "VSTHRD002", Justification = "This is a task, not a service.")]
     public override bool Execute()
     {
+        /*
         using var ctx = new JoinableTaskContext();
         var jtf = new JoinableTaskFactory(ctx);
-        var validations = this.Files.Select(file => jtf.Run<bool>(async () =>
+        */
+        var validations = this.Files.Select(file =>
         {
-            return await this.ValidateAsync(file.ItemSpec).ConfigureAwait(false);
-        }));
+            return this.ValidateAsync(file.ItemSpec).Result;
+        });
 
         return true;
     }
