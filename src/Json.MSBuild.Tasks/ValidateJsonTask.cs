@@ -35,7 +35,7 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
     {
         ////try
         ////{
-        this.Log.LogMessage($"Validating -> {filePath}");
+        this.Log.LogMessage(MessageImportance.High, $"Validating -> {filePath}");
         using var json = File.OpenRead(filePath);
         var options = new JsonDocumentOptions
         {
