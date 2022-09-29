@@ -19,6 +19,10 @@ indent_size = 2
 [*.cs]
 # Uninstantiated internal classes. Causes false positives with minimal api style files
 dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CS1591.severity = none
+# Properties should not return arrays, in conflict with the MSBuild SDK
+dotnet_diagnostic.CA1819.severity = none
+
 # Using inside of namespace
 dotnet_diagnostic.SA1200.severity = none
 # File headers
@@ -29,3 +33,4 @@ dotnet_diagnostic.SA1642.severity = none
 dotnet_diagnostic.SA1600.severity = none
 # SA1623: Property summary documentation should match accessors
 dotnet_diagnostic.SA1623.severity = none
+
