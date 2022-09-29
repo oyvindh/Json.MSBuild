@@ -16,10 +16,8 @@
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="6.0.6" />
     <PackageReference Include="JsonSchema.Net" Version="3.2.1" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.0.0" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.0.0" />
-    <!-- Marks all packages as 'local only' so they don't end up in the nuspec. -->
-    <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.0.0" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>
