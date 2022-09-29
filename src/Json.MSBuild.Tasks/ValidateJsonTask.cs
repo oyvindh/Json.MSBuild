@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Json.Schema;
 using Microsoft.Build.Framework;
+using Microsoft.VisualStudio.Threading;
 
 /// <summary>
 /// MSBuild Task for parsing and validating an arbitrary number of json files including the schema.
@@ -18,14 +19,21 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
 
     public override bool Execute()
     {
-        var validations = this.Files.Select(file => ValidateAsync(file.ItemSpec));
+        using var ctx = new JoinableTaskContext();
+        var jtf = new JoinableTaskFactory(ctx);
+        var validations = this.Files.Select(file => jtf.Run<bool>(async () =>
+        {
+            return await this.ValidateAsync(file.ItemSpec).ConfigureAwait(false);
+        }));
+
         return true;
     }
 
-    private static async Task<bool> ValidateAsync(string filePath)
+    private async Task<bool> ValidateAsync(string filePath)
     {
         ////try
         ////{
+        this.Log.LogMessage($"Validating -> {filePath}");
         using var json = File.OpenRead(filePath);
         var options = new JsonDocumentOptions
         {
