@@ -28,7 +28,7 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
             return this.ValidateAsync(file.ItemSpec).Result;
         });
 
-        return true;
+        return !validations.Any(v => v == false);
     }
 
     private async Task<bool> ValidateAsync(string filePath)
