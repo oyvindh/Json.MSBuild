@@ -3,6 +3,7 @@ namespace Json.MSBuild.Tasks;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Json.Schema;
@@ -13,6 +14,8 @@ using Microsoft.Build.Framework;
 /// </summary>
 public class JsonValidator : Microsoft.Build.Utilities.Task
 {
+    private static readonly HttpClient HttpClient = new HttpClient();
+
     [Required]
     public ITaskItem[] Files { get; set; }
 
@@ -31,11 +34,19 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
         return !validations.Any(v => v == false);
     }
 
+    private static async Task<Stream> DownloadAsStreamAsync(string uri)
+    {
+        using var response = await HttpClient.GetAsync(uri).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+    }
+
     private async Task<bool> ValidateAsync(string filePath)
     {
         try
         {
-            this.Log.LogMessage(MessageImportance.High, $"Validating -> {filePath}");
+            this.Log.LogMessage(MessageImportance.Normal, $"Validating -> {filePath}");
             using var json = File.OpenRead(filePath);
             var options = new JsonDocumentOptions
             {
@@ -43,11 +54,21 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
                 CommentHandling = JsonCommentHandling.Skip,
             };
             using var document = await JsonDocument.ParseAsync(json, options).ConfigureAwait(false);
-            /*
-            var schema = await JsonSchema.FromStream().ConfigureAwait(false);
-            var result = schema.Validate(json.RootElement);
+
+            // Get the schema url from the json file
+            if (!document.RootElement.TryGetProperty("$schema", out var schemaUrl))
+            {
+                this.Log.LogWarning($"The json file {filePath} does not contain a $schema property.");
+                return true;
+            }
+
+            // Download the schema and use it for validation
+            var schemaStream = await DownloadAsStreamAsync(schemaUrl.ToString()).ConfigureAwait(false);
+
+            var schema = await JsonSchema.FromStream(schemaStream).ConfigureAwait(false);
+            var result = schema.Validate(document.RootElement);
             var validity = result.IsValid ? "Valid" : "Invalid";
-            */
+
             return true;
         }
         catch (JsonException ex)
