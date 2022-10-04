@@ -7,6 +7,7 @@
     <description>MSBuild tasks for doing json operations build-time.</description>
     <Product>Json.MSBuild.Tasks</Product>
     <PackageTags>msbuild;json</PackageTags>
+    <IsPublishable>true</IsPublishable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,10 +15,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="6.0.6" />
-    <PackageReference Include="JsonSchema.Net" Version="3.2.1" />
-    <PackageReference Include="Microsoft.Build.Framework" Version="17.0.0" PrivateAssets="All"/>
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.0.0" PrivateAssets="All"/>
+    <PackageReference Include="System.Text.Json" Version="6.0.6" PrivateAssets="All" />
+    <PackageReference Include="JsonSchema.Net" Version="3.2.1" PrivateAssets="All" IncludeAssets="compile;runtime" Pack="true"/>
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.0.0" PrivateAssets="All" />
   </ItemGroup>
 
+  <Target Name="AddPackDependencies"
+          Inputs="@(RuntimeCopyLocalItems)"
+          Outputs="%(RuntimeCopyLocalItems.NuGetPackageId)"
+          DependsOnTargets="ResolvePackageAssets"
+          BeforeTargets="GenerateNuspec"
+          AfterTargets="ResolvePackageAssets">
+    <ItemGroup>
+      <NuGetPackageId Include="@(RuntimeCopyLocalItems -> '%(NuGetPackageId)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <NuGetPackageId>@(NuGetPackageId -&gt; Distinct())</NuGetPackageId>
+    </PropertyGroup>
+    <ItemGroup>
+      <PackageReferenceDependency Include="@(PackageReference -&gt; WithMetadataValue('Identity', '$(NuGetPackageId)'))" />
+    </ItemGroup>
+    <PropertyGroup>
+      <NuGetPackagePack>@(PackageReferenceDependency -> '%(Pack)')</NuGetPackagePack>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(NuGetPackagePack)' == 'true'">
+      <_PackageFiles Include="@(RuntimeCopyLocalItems)" PackagePath="$(BuildOutputTargetFolder)/$(TargetFramework)/%(Filename)%(Extension)" />
+      <RuntimeCopyLocalItems Update="@(RuntimeCopyLocalItems)" CopyLocal="true" Private="true" />
+      <ResolvedFileToPublish Include="@(RuntimeCopyLocalItems)" CopyToPublishDirectory="PreserveNewest" RelativePath="%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
 </Project>
