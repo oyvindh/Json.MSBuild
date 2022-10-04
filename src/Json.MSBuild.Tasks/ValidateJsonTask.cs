@@ -22,10 +22,6 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
     [SuppressMessage("", "VSTHRD002", Justification = "This is a task, not a service.")]
     public override bool Execute()
     {
-        /*
-        using var ctx = new JoinableTaskContext();
-        var jtf = new JoinableTaskFactory(ctx);
-        */
         var validations = this.Files.Select(file =>
         {
             return this.ValidateAsync(file.ItemSpec).Result;
@@ -47,12 +43,12 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
         try
         {
             this.Log.LogMessage(MessageImportance.Normal, $"Validating -> {filePath}");
-            using var json = File.OpenRead(filePath);
             var options = new JsonDocumentOptions
             {
                 AllowTrailingCommas = false,
                 CommentHandling = JsonCommentHandling.Skip,
             };
+            using var json = File.OpenRead(filePath);
             using var document = await JsonDocument.ParseAsync(json, options).ConfigureAwait(false);
 
             // Get the schema url from the json file
