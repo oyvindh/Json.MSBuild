@@ -31,16 +31,15 @@ jobs:
     - name: Build release
       if: ${{ github.ref == 'refs/heads/main' }}
       run: dotnet build -r linux-musl-x64 --no-self-contained --configuration Release --no-restore -warnaserror
-    - name: Publish release
+    - name: Package NuGet
       if: ${{ github.ref == 'refs/heads/main' }}
-      run: dotnet publish --no-restore --no-build --configuration Release -r linux-musl-x64 --no-self-contained -p:PublishSingleFile=true
+      run: dotnet pack --no-restore --no-build --configuration Release
     - uses: actions/upload-artifact@v3
       if: ${{ github.ref == 'refs/heads/main' }}
       with:
-        name: build-drop
+        name: packages-drop
         path: |
-          src/Web/bin/Release/net6.0/linux-musl-x64/
-          src/Web/Dockerfile
+          src/**/*.nuget
 
   docker-release:
     runs-on: ubuntu-latest
