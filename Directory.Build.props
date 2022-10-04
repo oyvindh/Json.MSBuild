@@ -11,13 +11,14 @@
     <!-- Prevent NerdBank from loading in mono (which omnisharp uses on linux) /-->
     <GenerateAssemblyVersionInfo Condition="'$(MSBuildRuntimeType)'=='Mono'">false</GenerateAssemblyVersionInfo>
     <LangVersion>latest</LangVersion>
+    <Author>Øyvind Hvamstad</Author>
   </PropertyGroup>
 
   <PropertyGroup Label="Assembly Info">
-    <Company>Microsoft Corporation</Company>
-    <Copyright>Copyright © $([System.DateTime]::Now.ToString(yyyy)) Microsoft Corporation. All rights reserved.</Copyright>
-    <Product Condition="'$(PublicRelease)'!='true'">Microsoft ® - Private (Built by $(USERNAME) on $(COMPUTERNAME)).</Product>
-    <Product Condition="'$(PublicRelease)'=='true'">Microsoft ® $(MSBuildProjectName)</Product>
+    <Company>$(Author)</Company>
+    <Copyright>Copyright © $([System.DateTime]::Now.ToString(yyyy)) $(Author). All rights reserved.</Copyright>
+    <Product Condition="'$(PublicRelease)'!='true'">$(Author) ® - Private (Built by $(USERNAME) on $(COMPUTERNAME)).</Product>
+    <Product Condition="'$(PublicRelease)'=='true'">$(Author) ® $(MSBuildProjectName)</Product>
   </PropertyGroup>
 
   <PropertyGroup Label="Publish Customizations">
