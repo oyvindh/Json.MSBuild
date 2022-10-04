@@ -39,7 +39,7 @@ jobs:
       with:
         name: packages-drop
         path: |
-          src/**/*.nuget
+          src/**/*.nupkg
 
   docker-release:
     runs-on: ubuntu-latest
