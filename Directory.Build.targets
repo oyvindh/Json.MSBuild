@@ -8,7 +8,7 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
-  
+
   <PropertyGroup Label="Analyzers Log Output">
     <AnalyzersLogDirectory Condition="'$(AnalyzersLogDirectory)'==''">$(IntermediateOutputPath)\CodeAnalysisLogs\</AnalyzersLogDirectory>
     <ErrorLog>$(AnalyzersLogDirectory)\$(MSBuildProjectName).sarif</ErrorLog>
@@ -30,7 +30,7 @@
         <IsDelaySigned>false</IsDelaySigned>
         <FullFileName>$(TargetFileName)</FullFileName>
       </BuildOutputs>
-      
+
       <BuildOutputs Include="@(ReferencesCopiedInThisBuild->'%(FullPath)')">
         <IsCopiedReference>true</IsCopiedReference>
         <IsDelaySigned>false</IsDelaySigned>
@@ -38,9 +38,9 @@
       </BuildOutputs>
     </ItemGroup>
   </Target>
-  
+
   <Target Name="CreateDirectories" BeforeTargets="CoreCompile">
-    <MakeDir Directories="$(AnalyzersLogDirectory)"/>  
+    <MakeDir Directories="$(AnalyzersLogDirectory)"/>
   </Target>
 
   <!-- In addition to the sarif output, also log the referenced analyzer dlls and the ruleset file path -->
@@ -57,4 +57,5 @@
         Overwrite="true"
         Encoding="Unicode" />
   </Target>
+
 </Project>
