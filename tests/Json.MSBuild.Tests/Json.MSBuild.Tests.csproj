@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Json.MSBuild.Tasks\Json.MSBuild.Tasks.csproj" />
+    <ProjectReference Include="..\..\src\Json.MSBuild\Json.MSBuild.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,13 +5,11 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B2137503-B2E3-41B8-8ABA-E5D75325A0FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Json.MSBuild.Tasks", "src\Json.MSBuild.Tasks\Json.MSBuild.Tasks.csproj", "{5DEB5F14-C0F2-46B3-BE2E-89E8A7C6854F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Json.Cli", "src\Json.Cli\Json.Cli.csproj", "{A456943A-122A-43AE-97D1-DA1B47831C26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Json.MSBuild", "src\Json.MSBuild\Json.MSBuild.csproj", "{5DEB5F14-C0F2-46B3-BE2E-89E8A7C6854F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4E57FFC6-1E75-4CCB-8F80-9DE50A6BFB4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Json.MSBuild.Tasks.Tests", "tests\Json.MSBuild.Tasks.Tests\Json.MSBuild.Tasks.Tests.csproj", "{915BB5C9-0D76-47B0-8055-828A45FD4D15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Json.MSBuild.Tests", "tests\Json.MSBuild.Tests\Json.MSBuild.Tests.csproj", "{915BB5C9-0D76-47B0-8055-828A45FD4D15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

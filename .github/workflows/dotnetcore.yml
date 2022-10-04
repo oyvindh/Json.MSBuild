@@ -31,10 +31,10 @@ jobs:
     # Release build
     - name: Install dependencies for release
       if: ${{ env.publicRelease }}
-      run: dotnet restore -r linux-musl-x64
+      run: dotnet restore
     - name: Build release
       if: ${{ env.publicRelease }}
-      run: dotnet build -r linux-musl-x64 --no-self-contained --configuration Release --no-restore -warnaserror
+      run: dotnet build --no-self-contained --configuration Release --no-restore -warnaserror
     - name: Package NuGet
       if: ${{ env.publicRelease }}
       run: dotnet pack --no-restore --no-build --configuration Release
@@ -47,17 +47,15 @@ jobs:
 
   nuget-release:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'disabled' }}
+    if: ${{ env.publicRelease }}
     needs: build
     steps:
     - uses: actions/download-artifact@v3
       with:
-        name: build-drop
-    - uses: azure/docker-login@v1
-      with:
-        login-server: hicacr.azurecr.io
-        username: ${{ secrets.ACR_USERNAME }}
-        password: ${{ secrets.ACR_PASSWORD }}
-    - run: |
-        docker build . -t hicacr.azurecr.io/foreignaffairs:${{github.sha}} -t hicacr.azurecr.io/foreignaffairs:latest
-        docker push hicacr.azurecr.io/foreignaffairs --all-tags
+        name: packages-drop
+
+    - uses: actions/setup-dotnet@v1.7.2
+
+    - name: Publish NuGet Package
+      run: dotnet nuget push *.pupkg -k secrets.NUGET_API_KEY
+

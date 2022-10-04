@@ -1,4 +1,4 @@
-namespace Json.MSBuild.Tasks;
+namespace Json.MSBuild;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;

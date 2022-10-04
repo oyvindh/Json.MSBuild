@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>Json.MSBuild.Tasks</PackageId>
-    <authors>oyvind@hvamstad.net</authors>
+    <PackageId>Hic.Json.MSBuild</PackageId>
+    <authors>oyvind@hic.no</authors>
     <description>MSBuild tasks for doing json operations build-time.</description>
-    <Product>Json.MSBuild.Tasks</Product>
+    <Product>Hic.Json.MSBuild</Product>
     <PackageTags>msbuild;json</PackageTags>
   </PropertyGroup>
 

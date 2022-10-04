@@ -1,4 +1,4 @@
-namespace Json.MSBuild.Tasks;
+namespace Json.MSBuild;
 
 using System;
 using System.Diagnostics.CodeAnalysis;
