@@ -11,6 +11,8 @@ env:
 
 jobs:
   build:
+    env:
+      Configuration: "${{ $PublicRelease && 'Release' || 'Debug' }}"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -23,28 +25,28 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore -warnaserror
+      run: dotnet build --configuration $Configuration --no-restore -warnaserror
     - name: Test
-      run: dotnet test --no-restore --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+      run: dotnet test --configuration $Configuration --no-restore --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
 
     # Release build
     - name: Install dependencies for release
-      if: ${{ github.ref == 'refs/heads/main' }}
+      if: ${{ PublicRelease }}
       run: dotnet restore -r linux-musl-x64
     - name: Build release
-      if: ${{ github.ref == 'refs/heads/main' }}
+      if: ${{ PublicRelease }}
       run: dotnet build -r linux-musl-x64 --no-self-contained --configuration Release --no-restore -warnaserror
     - name: Package NuGet
-      if: ${{ github.ref == 'refs/heads/main' }}
+      if: ${{ PublicRelease }}
       run: dotnet pack --no-restore --no-build --configuration Release
     - uses: actions/upload-artifact@v3
-      if: ${{ github.ref == 'refs/heads/main' }}
+      if: ${{ PublicRelease }}
       with:
         name: packages-drop
         path: |
           src/**/*.nupkg
 
-  docker-release:
+  nuget-release:
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'disabled' }}
     needs: build
