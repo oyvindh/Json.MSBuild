@@ -7,12 +7,12 @@ on:
     branches: [ main ]
 
 env:
-    PublicRelease: "${{ github.ref == 'refs/heads/main' && 'True' || 'False' }}"
+    publicRelease: "${{ github.ref == 'refs/heads/main' && 'True' || 'False' }}"
 
 jobs:
   build:
     env:
-      Configuration: "${{ env.PublicRelease && 'Release' || 'Debug' }}"
+      configuration: "${{ env.publicRelease && 'Release' || 'Debug' }}"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -25,22 +25,22 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration $Configuration --no-restore -warnaserror
+      run: dotnet build --configuration $configuration --no-restore -warnaserror
     - name: Test
-      run: dotnet test --configuration $Configuration --no-restore --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
+      run: dotnet test --configuration $configuration --no-restore --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
 
     # Release build
     - name: Install dependencies for release
-      if: ${{ env.PublicRelease }}
+      if: ${{ env.publicRelease }}
       run: dotnet restore -r linux-musl-x64
     - name: Build release
-      if: ${{ env.PublicRelease }}
+      if: ${{ env.publicRelease }}
       run: dotnet build -r linux-musl-x64 --no-self-contained --configuration Release --no-restore -warnaserror
     - name: Package NuGet
-      if: ${{ env.PublicRelease }}
+      if: ${{ env.publicRelease }}
       run: dotnet pack --no-restore --no-build --configuration Release
     - uses: actions/upload-artifact@v3
-      if: ${{ env.PublicRelease }}
+      if: ${{ env.publicRelease }}
       with:
         name: packages-drop
         path: |
