@@ -8,7 +8,7 @@ on:
 
 env:
     publicRelease: "${{ github.ref == 'refs/heads/main' && 'True' || 'False' }}"
-    configuration: "${{ env.publicRelease && 'Release' || 'Debug' }}"
+    configuration: "${{ github.ref == 'refs/heads/main' && 'Release' || 'Debug' }}"
 
 jobs:
   build:
