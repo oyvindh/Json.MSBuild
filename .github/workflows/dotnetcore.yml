@@ -12,7 +12,7 @@ env:
 jobs:
   build:
     env:
-      Configuration: "${{ $PublicRelease && 'Release' || 'Debug' }}"
+      Configuration: "${{ env.PublicRelease && 'Release' || 'Debug' }}"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -31,16 +31,16 @@ jobs:
 
     # Release build
     - name: Install dependencies for release
-      if: ${{ PublicRelease }}
+      if: ${{ env.PublicRelease }}
       run: dotnet restore -r linux-musl-x64
     - name: Build release
-      if: ${{ PublicRelease }}
+      if: ${{ env.PublicRelease }}
       run: dotnet build -r linux-musl-x64 --no-self-contained --configuration Release --no-restore -warnaserror
     - name: Package NuGet
-      if: ${{ PublicRelease }}
+      if: ${{ env.PublicRelease }}
       run: dotnet pack --no-restore --no-build --configuration Release
     - uses: actions/upload-artifact@v3
-      if: ${{ PublicRelease }}
+      if: ${{ env.PublicRelease }}
       with:
         name: packages-drop
         path: |
