@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Json.MSBuild.Tasks\Json.MSBuild.Tasks.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.0.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.0.0" PrivateAssets="All" />
+    <PackageReference Include="JsonSchema.Net" Version="3.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="json/*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

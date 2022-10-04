@@ -1,5 +1,6 @@
 namespace Json.MSBuild.Tasks;
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,7 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
     private static readonly HttpClient HttpClient = new HttpClient();
 
     [Required]
-    public ITaskItem[] Files { get; set; }
+    public ITaskItem[] Files { get; set; } = Array.Empty<ITaskItem>();
 
     [SuppressMessage("", "VSTHRD002", Justification = "This is a task, not a service.")]
     public override bool Execute()
@@ -32,7 +33,7 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
 
     private static async Task<Stream> DownloadAsStreamAsync(string uri)
     {
-        using var response = await HttpClient.GetAsync(uri).ConfigureAwait(false);
+        var response = await HttpClient.GetAsync(uri).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
