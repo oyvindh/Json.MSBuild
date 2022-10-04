@@ -1,6 +1,6 @@
 # Introduction
 
-This repository is the .NET baseline. It bootstraps the development of .NET Full or Core libraries or applications.
+This repository contains a set of MSBuild tasks for handling JSON in the build process. These tasks are not intended to replace existing tasks such as JsonPeek and JsonPoke, but at the time of writing no alternatives could be found.
 
 ## Build and Test
 
@@ -13,7 +13,3 @@ This repository is the .NET baseline. It bootstraps the development of .NET Full
 ## Adding new projects
 
 `dotnet new`
-
-## Azure DebOps build specifics
-
-Read the [.azure-pipeline/README](.azure-pipelines/README.md) to understand more about how this integrates with Azure DevOps.
