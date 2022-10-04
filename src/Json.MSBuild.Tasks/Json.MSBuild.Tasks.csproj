@@ -16,6 +16,8 @@
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="6.0.6" PrivateAssets="All" />
     <PackageReference Include="JsonSchema.Net" Version="3.2.1" PrivateAssets="All" IncludeAssets="compile;runtime" Pack="true"/>
+    <PackageReference Include="Json.More.Net" Version="1.7.0" PrivateAssets="All" Pack="true" />
+    <PackageReference Include="JsonPointer.Net" Version="2.2.1" PrivateAssets="All" Pack="true" />
     <PackageReference Include="Microsoft.Build.Framework" Version="17.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.0.0" PrivateAssets="All" />
   </ItemGroup>
