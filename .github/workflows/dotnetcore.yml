@@ -8,11 +8,10 @@ on:
 
 env:
     publicRelease: "${{ github.ref == 'refs/heads/main' && 'True' || 'False' }}"
+    configuration: "${{ env.publicRelease && 'Release' || 'Debug' }}"
 
 jobs:
   build:
-    env:
-      configuration: "${{ env.publicRelease && 'Release' || 'Debug' }}"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
