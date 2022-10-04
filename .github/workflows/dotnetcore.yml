@@ -47,15 +47,15 @@ jobs:
 
   nuget-release:
     runs-on: ubuntu-latest
-    if: ${{ env.publicRelease }}
     needs: build
     steps:
     - uses: actions/download-artifact@v3
+      if: ${{ env.publicRelease }}
       with:
         name: packages-drop
 
     - uses: actions/setup-dotnet@v1.7.2
-
+      if: ${{ env.publicRelease }}
     - name: Publish NuGet Package
-      run: dotnet nuget push *.pupkg -k secrets.NUGET_API_KEY
+      run: dotnet nuget push *.nupkg -k secrets.NUGET_API_KEY
 
