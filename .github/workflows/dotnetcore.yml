@@ -41,7 +41,7 @@ jobs:
       if: ${{ env.publicRelease }}
       run: dotnet pack --no-restore --no-build --configuration Release
     - name: Set package version
-      id: packageVersion
+      id: setPackageVersion
       run: echo "::set-output name=packageVersion::$BUILD_VERSION"
     - uses: actions/upload-artifact@v3
       if: ${{ env.publicRelease }}
@@ -59,7 +59,7 @@ jobs:
       with:
         name: packages-drop
     - name: Echo package version
-      run: echo ${{ env.BUILD_VERSION }}
+      run: echo ${{ needs.build.outputs.packageVersion }}
     - uses: actions/setup-dotnet@v1.7.2
       if: ${{ env.publicRelease }}
     - name: Publish NuGet Package
