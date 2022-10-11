@@ -58,9 +58,9 @@ jobs:
       if: ${{ env.publicRelease }}
       with:
         name: packages-drop
-        path: .
-    - name: Echo package version
-      run: echo ${{ needs.build.outputs.packageVersion }}
+        path: packages
+    - name: Display structure of downloaded files
+      run: ls -R
     - uses: actions/setup-dotnet@v1.7.2
       if: ${{ env.publicRelease }}
     - name: Publish NuGet Package
