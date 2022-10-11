@@ -1,7 +1,0 @@
-<Project TreatAsLocalProperty="TasksAssembly">
-  <PropertyGroup>
-    <TasksAssembly>$(MSBuildThisFileDirectory)\..\lib\netstandard2.0\Json.MSBuild.dll</TasksAssembly>
-  </PropertyGroup>
-
-  <UsingTask TaskName="JsonValidator" AssemblyFile="$(TasksAssembly)" />
-</Project>
