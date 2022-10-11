@@ -38,8 +38,8 @@ jobs:
     - name: Package NuGet
       if: ${{ env.publicRelease }}
       run: dotnet pack --no-restore --no-build --configuration Release
-    - name: Echo package version
-      run: echo ${{ env.BUILD_VERSION }}
+    - name: Set package version
+      run: echo "::set-env name=BUILD_VERSION::$BUILD_VERSION"
     - uses: actions/upload-artifact@v3
       if: ${{ env.publicRelease }}
       with:
