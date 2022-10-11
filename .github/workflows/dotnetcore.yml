@@ -64,5 +64,5 @@ jobs:
     - uses: actions/setup-dotnet@v1.7.2
       if: ${{ env.publicRelease }}
     - name: Publish NuGet Package
-      run: dotnet nuget push packages/Hic.Json.MSBuild.${{ needs.build.outputs.packageVersion }}.nupkg -k secrets.NUGET_API_KEY
+      run: dotnet nuget push packages/Hic.Json.MSBuild.${{ needs.build.outputs.packageVersion }}.nupkg -k secrets.NUGET_API_KEY -s https://api.nuget.org/v3/index.json
 
