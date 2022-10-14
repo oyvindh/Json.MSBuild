@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hic.no/foo.schema.json",
+  "title": "Record of foo",
+  "description": "This document records the details of foo",
+  "type": "object",
+  "required": [ "id", "name" ],
+  "properties": {
+    "id": {
+      "description": "A unique identifier for the foo",
+      "type": "number"
+    },
+    "name": {
+      "description": "The name of foo",
+      "type": "string"
+    },
+    "bar": {
+      "description": "The bar of foo, or foobar",
+      "type": "object",
+      "properties": {
+        "indoor": {
+          "type": "array",
+          "items": {
+              "description": "List of indoor hobbies",
+              "type": "string"
+          }
+        },
+        "outdoor": {
+          "type": "array",
+          "items": {
+              "description": "List of outdoor hobbies",
+              "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-  }
+  "$schema": "https://gist.githubusercontent.com/oyvindh/1ecc9c00302a7d7dd25cc9ddd0044f35/raw/f36e0d170b910fc96c4c9a5f81af5d05d113f52f/simple.json",
+  "id": 123,
+  "name": "Some name"
 }

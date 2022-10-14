@@ -12,5 +12,6 @@
 
   <ItemGroup>
     <None Include="json/*.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="schemas/*.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

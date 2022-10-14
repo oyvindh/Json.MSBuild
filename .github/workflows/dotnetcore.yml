@@ -22,25 +22,17 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1.7.2
 
-    # Debug build
     - name: Install dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build --configuration $configuration --no-restore -warnaserror
     - name: Test
       run: dotnet test --configuration $configuration --no-restore --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura
-
-    # Release build
-    - name: Install dependencies for release
-      if: ${{ env.publicRelease }}
-      run: dotnet restore
-    - name: Build release
-      if: ${{ env.publicRelease }}
-      run: dotnet build --no-self-contained --configuration Release --no-restore -warnaserror
     - name: Package NuGet
       if: ${{ env.publicRelease }}
-      run: dotnet pack --no-restore --no-build --configuration Release -o packages
+      run: dotnet pack --no-restore --no-build --configuration $configuration -o packages
     - name: Set package version
+      if: ${{ env.publicRelease }}
       id: setPackageVersion
       run: echo "::set-output name=packageVersion::$BUILD_VERSION"
     - uses: actions/upload-artifact@v3

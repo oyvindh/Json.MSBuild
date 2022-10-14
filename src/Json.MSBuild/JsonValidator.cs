@@ -15,10 +15,14 @@ using Microsoft.Build.Framework;
 /// </summary>
 public class JsonValidator : Microsoft.Build.Utilities.Task
 {
-    private static readonly HttpClient HttpClient = new HttpClient();
+    private static readonly HttpClient HttpClient = new ();
 
     [Required]
     public ITaskItem[] Files { get; set; } = Array.Empty<ITaskItem>();
+
+    public bool ValidateSchema { get; set; } = true;
+
+    public string? SchemaFile { get; set; }
 
     [SuppressMessage("", "VSTHRD002", Justification = "This is a task, not a service.")]
     public override bool Execute()
@@ -31,7 +35,7 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
         return !validations.Any(v => v == false);
     }
 
-    private static async Task<Stream> DownloadAsStreamAsync(string uri)
+    private static async Task<Stream> DownloadAsStreamAsync(Uri uri)
     {
         var response = await HttpClient.GetAsync(uri).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
@@ -52,21 +56,53 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
             using var json = File.OpenRead(filePath);
             using var document = await JsonDocument.ParseAsync(json, options).ConfigureAwait(false);
 
-            // Get the schema url from the json file
-            if (!document.RootElement.TryGetProperty("$schema", out var schemaUrl))
+            // Get the schema url from the json file if the root element is an object.
+            if (document.RootElement.ValueKind != JsonValueKind.Object || this.ValidateSchema is false)
             {
-                this.Log.LogWarning($"The json file {filePath} does not contain a $schema property.");
                 return true;
             }
 
-            // Download the schema and use it for validation
-            var schemaStream = await DownloadAsStreamAsync(schemaUrl.ToString()).ConfigureAwait(false);
+            Stream schemaStream;
+            if (this.SchemaFile is not null)
+            {
+                schemaStream = File.OpenRead(this.SchemaFile);
+            }
+            else
+            {
+                if (!document.RootElement.TryGetProperty("$schema", out var schemaUrlElement))
+                {
+                    this.Log.LogWarning($"The json file {filePath} does not contain a $schema property.");
+                    return true;
+                }
+
+                var schemaUrl = new Uri(schemaUrlElement.GetString(), UriKind.RelativeOrAbsolute);
+
+                // Download the schema and use it for validation
+                schemaStream = await DownloadAsStreamAsync(schemaUrl).ConfigureAwait(false);
+            }
 
             var schema = await JsonSchema.FromStream(schemaStream).ConfigureAwait(false);
-            var result = schema.Validate(document.RootElement);
-            var validity = result.IsValid ? "Valid" : "Invalid";
 
-            return true;
+            var result = schema.Validate(
+                document.RootElement,
+                new ValidationOptions
+                {
+                    OutputFormat = OutputFormat.Basic,
+                    //// ValidateMetaSchema = false,
+                    //// ValidateAs = Draft.Draft6,
+                });
+            var resultString = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
+
+            if (result.IsValid)
+            {
+                this.Log.LogMessage(MessageImportance.Normal, resultString);
+                return true;
+            }
+            else
+            {
+                this.Log.LogError(resultString);
+                return false;
+            }
         }
         catch (JsonException ex)
         {
