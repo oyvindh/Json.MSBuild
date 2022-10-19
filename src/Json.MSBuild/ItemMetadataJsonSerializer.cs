@@ -27,8 +27,6 @@ public class ItemMetadataJsonSerializer : Microsoft.Build.Utilities.Task
             this.MetadataToSerialize = metadataNames.ToArray();
         }
 
-        this.Log.LogMessage(MessageImportance.High, $"metadataNames: {string.Join(", ", metadataNames)}");
-
         var dictionaries = this.Items
             .Select(
                 i => metadataNames
