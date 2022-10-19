@@ -32,6 +32,11 @@ public class ItemMetadataJsonSerializerTests
                     { "a", "1" },
                     { "b", "2" },
                 }),
+                new TaskItem("2", new Dictionary<string, string>
+                {
+                    { "a", "1" },
+                    { "b", "2" },
+                }),
             },
             MetadataToSerialize = new string[] { "a", "b" },
         };
@@ -40,6 +45,6 @@ public class ItemMetadataJsonSerializerTests
 
         Assert.True(result);
         Assert.Empty(this.errors);
-        Assert.Equal("[{\"b\":\"2\"},{\"a\":\"1\"}]", task.Json);
+        Assert.Equal("[{\"b\":\"2\",\"a\":\"1\"},{\"b\":\"2\",\"a\":\"1\"}]", task.Json);
     }
 }

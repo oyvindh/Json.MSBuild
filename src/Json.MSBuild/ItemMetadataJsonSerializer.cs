@@ -17,6 +17,8 @@ public class ItemMetadataJsonSerializer : Microsoft.Build.Utilities.Task
     [Output]
     public string Json { get; set; } = string.Empty;
 
+    public bool Indent { get; set; }
+
     public override bool Execute()
     {
         var metadataNames = this.Items.SelectMany(i => i.MetadataNames.Cast<string>()).Distinct();
@@ -25,16 +27,22 @@ public class ItemMetadataJsonSerializer : Microsoft.Build.Utilities.Task
             this.MetadataToSerialize = metadataNames.ToArray();
         }
 
-        var dictionaries = metadataNames
-            .Where(m => this.MetadataToSerialize.Contains(m))
+        this.Log.LogMessage(MessageImportance.High, $"metadataNames: {string.Join(", ", metadataNames)}");
+
+        var dictionaries = this.Items
             .Select(
-                n => this.Items
-                    .Select(i => new KeyValuePair<string, object>(n, i.GetMetadata(n)))
+                i => metadataNames
+                    .Where(m => this.MetadataToSerialize.Contains(m))
+                    .Select(n => new KeyValuePair<string, object>(n, i.GetMetadata(n)))
                     .ToDictionary(k => k.Key, v => v.Value));
 
         var objects = dictionaries.Select(d => DictionaryToObject(d));
 
-        this.Json = JsonSerializer.Serialize(objects);
+        var serializerOptions = new JsonSerializerOptions
+        {
+            WriteIndented = this.Indent,
+        };
+        this.Json = JsonSerializer.Serialize(objects, serializerOptions);
 
         return true;
     }
