@@ -62,10 +62,11 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
                 return true;
             }
 
-            Stream schemaStream;
+            JsonSchema schema;
             if (this.SchemaFile is not null)
             {
-                schemaStream = File.OpenRead(this.SchemaFile);
+                using var schemaStream = File.OpenRead(this.SchemaFile);
+                schema = await JsonSchema.FromStream(schemaStream).ConfigureAwait(false);
             }
             else
             {
@@ -78,10 +79,9 @@ public class JsonValidator : Microsoft.Build.Utilities.Task
                 var schemaUrl = new Uri(schemaUrlElement.GetString(), UriKind.RelativeOrAbsolute);
 
                 // Download the schema and use it for validation
-                schemaStream = await DownloadAsStreamAsync(schemaUrl).ConfigureAwait(false);
+                using var schemaStream = await DownloadAsStreamAsync(schemaUrl).ConfigureAwait(false);
+                schema = await JsonSchema.FromStream(schemaStream).ConfigureAwait(false);
             }
-
-            var schema = await JsonSchema.FromStream(schemaStream).ConfigureAwait(false);
 
             var result = schema.Validate(
                 document.RootElement,
