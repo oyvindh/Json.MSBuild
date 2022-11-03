@@ -6,11 +6,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Prevent NerdBank from loading in mono (which omnisharp uses on linux) /-->
     <GenerateAssemblyVersionInfo Condition="'$(MSBuildRuntimeType)'=='Mono'">false</GenerateAssemblyVersionInfo>
-    <LangVersion>latest</LangVersion>
     <Author>Øyvind Hvamstad</Author>
   </PropertyGroup>
 
